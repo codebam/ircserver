@@ -7,26 +7,18 @@
       pkgs = nixpkgs.legacyPackages.${system};
     in
     {
-      packages.default = pkgs.stdenv.mkDerivation
-        {
-          name = "hello-rust";
-          src = ./.;
-          nativeBuildInputs = with pkgs; [
-          ];
-          buildInputs = with pkgs; [
-            cargo
-          ];
-          buildPhase = ''
-            cargo build
-          '';
-          installPhase = ''
-            mkdir -p $out/bin
-            cp target/debug/hello $out/bin
-          '';
-        };
+      packages.default = pkgs.rustPlatform.buildRustPackage rec {
+        pname = "hello";
+        version = "0.1.0";
+        src = ./.;
+        cargoHash = "sha256-nZimqEgcrWzy1wOdepGjNET9J7iwfhZ8WG7a85/XRbw=";
+      };
       devShell = pkgs.mkShell {
         buildInputs = with pkgs; [
           cargo
+          rust-analyzer
+          rustc
+          rustfmt
         ];
       };
     }
